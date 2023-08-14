@@ -1,24 +1,48 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 
 export default function Carousel({ images }: { images: ReactElement[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const nextImageIndex = useCallback(
+    (next: number) => (next >= images.length - 1 ? 0 : next + 1),
+    [images.length]
+  );
+  const previousImageIndex = useCallback(
+    (prev: number) => (prev === 0 ? images.length - 1 : prev - 1),
+    [images.length]
+  );
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") {
+        setCurrentImageIndex(previousImageIndex);
+      } else if (e.key === "ArrowRight") {
+        setCurrentImageIndex(nextImageIndex);
+      }
+    },
+    [nextImageIndex, previousImageIndex]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) =>
-        prev >= images.length - 1 ? 0 : prev + 1
-      );
+      setCurrentImageIndex(nextImageIndex);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images.length, nextImageIndex]);
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev >= images.length - 1 ? 0 : prev + 1));
+    setCurrentImageIndex(nextImageIndex);
   };
 
   const handlePreviousImage = () => {
-    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentImageIndex(previousImageIndex);
   };
 
   return (
