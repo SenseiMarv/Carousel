@@ -6,10 +6,10 @@ settings:
 
 dependencies:
   '@tanstack/react-query':
-    specifier: ^4.32.6
+    specifier: 4.32.6
     version: 4.32.6(react-dom@18.2.0)(react@18.2.0)
   '@tanstack/react-query-devtools':
-    specifier: ^4.32.6
+    specifier: 4.32.6
     version: 4.32.6(@tanstack/react-query@4.32.6)(react-dom@18.2.0)(react@18.2.0)
   '@types/node':
     specifier: 20.5.0
@@ -24,7 +24,7 @@ dependencies:
     specifier: 10.4.15
     version: 10.4.15(postcss@8.4.27)
   axios:
-    specifier: ^1.4.0
+    specifier: 1.4.0
     version: 1.4.0
   eslint:
     specifier: 8.47.0
