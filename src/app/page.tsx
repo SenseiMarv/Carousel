@@ -34,14 +34,26 @@ export default function Home() {
     );
 
   if (data) {
-    const images = getThreeRandomImages(data).map((album) => (
+    const carouselOneImages = getThreeRandomImages(data).map((album) => (
       <Image
         key={album.id}
         loader={jsonPlaceholderImageLoader}
         src={album.url}
         alt={album.title}
-        width={500}
-        height={500}
+        width={600}
+        height={600}
+        priority={true}
+        unoptimized
+      />
+    ));
+    const carouselTwoImages = getThreeRandomImages(data).map((album) => (
+      <Image
+        key={album.id}
+        loader={jsonPlaceholderImageLoader}
+        src={album.url}
+        alt={album.title}
+        width={600}
+        height={600}
         priority={true}
         unoptimized
       />
@@ -49,8 +61,8 @@ export default function Home() {
 
     return (
       <div className="w-full h-full flex justify-center items-center flex-col gap-4">
-        <Carousel images={images} />
-        <Carousel images={images} />
+        <Carousel images={carouselOneImages} />
+        <Carousel images={carouselTwoImages} />
       </div>
     );
   }

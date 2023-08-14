@@ -48,7 +48,7 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
   return (
     <div className="relative">
       {images[currentImageIndex]}
-      <div className="absolute flex justify-between left-10 right-10 top-1/2">
+      <div className="absolute flex justify-between left-5 right-5 sm:left-10 sm:right-10 top-1/2">
         <button
           onClick={handlePreviousImage}
           className="rounded-full h-10 w-10 bg-blue-600 shadow-md hover:bg-blue-500 transition-colors duration-200"
