@@ -2,6 +2,7 @@ import { ReactElement, useCallback, useEffect, useState } from "react";
 
 export default function Carousel({ images }: { images: ReactElement[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isFading, setIsFading] = useState(false);
 
   const nextImageIndex = useCallback(
     (next: number) => (next >= images.length - 1 ? 0 : next + 1),
@@ -23,12 +24,14 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
     [nextImageIndex, previousImageIndex]
   );
 
+  // Keyboard events
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  // Auto change image
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(nextImageIndex);
@@ -36,6 +39,16 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
 
     return () => clearInterval(interval);
   }, [images.length, nextImageIndex]);
+
+  // Fade effect
+  useEffect(() => {
+    setIsFading(true);
+    const fadeTimeout = setTimeout(() => {
+      setIsFading(false);
+    }, 500);
+
+    return () => clearTimeout(fadeTimeout);
+  }, [currentImageIndex]);
 
   const handleNextImage = () => {
     setCurrentImageIndex(nextImageIndex);
@@ -46,8 +59,23 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
   };
 
   return (
-    <div className="relative">
-      {images[currentImageIndex]}
+    <div
+      className="relative"
+      style={{
+        minWidth: images[0].props.width,
+        minHeight: images[0].props.height,
+      }}
+    >
+      {images.map((image, index) => (
+        <div
+          key={index}
+          className={`absolute top-0 left-0 transition-opacity duration-500 ${
+            currentImageIndex === index ? "opacity-100" : "opacity-0"
+          } ${isFading ? "opacity-0" : "opacity-100"}`}
+        >
+          {image}
+        </div>
+      ))}
       <div className="absolute flex justify-between left-5 right-5 sm:left-10 sm:right-10 top-1/2">
         <button
           onClick={handlePreviousImage}
