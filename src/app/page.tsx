@@ -11,6 +11,7 @@ import Spinner from "@/components/Spinner";
 import { useQuery } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import Image from "next/image";
+import { ReactElement } from "react";
 
 export default function Home() {
   const { isLoading, error, data } = useQuery({
@@ -33,7 +34,7 @@ export default function Home() {
     );
 
   if (data) {
-    const images = data.map((album) => (
+    const images = getThreeRandomImages(data).map((album) => (
       <Image
         key={album.id}
         loader={jsonPlaceholderImageLoader}
@@ -41,15 +42,22 @@ export default function Home() {
         alt={album.title}
         width={500}
         height={500}
+        priority={true}
+        unoptimized
       />
     ));
 
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div className="w-full h-full flex justify-center items-center flex-col gap-4">
+        <Carousel images={images} />
         <Carousel images={images} />
       </div>
     );
   }
 
   return null;
+}
+
+function getThreeRandomImages<T>(images: T[]) {
+  return images.sort(() => 0.5 - Math.random()).slice(0, 3);
 }
