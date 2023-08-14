@@ -70,8 +70,10 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
         <div
           key={index}
           className={`absolute top-0 left-0 transition-opacity duration-500 ${
-            currentImageIndex === index ? "opacity-100" : "opacity-0"
-          } ${isFading ? "opacity-0" : "opacity-100"}`}
+            currentImageIndex === index && !isFading
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
         >
           {image}
         </div>
