@@ -1,4 +1,11 @@
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import {
+  KeyboardEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 export default function Carousel({ images }: { images: ReactElement[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -18,24 +25,6 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
       setCurrentImageIndex(nextImageIndex);
     }, 3000);
   }, [nextImageIndex]);
-
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        setCurrentImageIndex(previousImageIndex);
-      } else if (e.key === "ArrowRight") {
-        setCurrentImageIndex(nextImageIndex);
-      }
-    },
-    [nextImageIndex, previousImageIndex]
-  );
-
-  // Keyboard events
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
 
   // Auto change image
   useEffect(() => {
@@ -72,6 +61,14 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
     }
   };
 
+  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "ArrowLeft") {
+      setCurrentImageIndex(previousImageIndex);
+    } else if (e.key === "ArrowRight") {
+      setCurrentImageIndex(nextImageIndex);
+    }
+  };
+
   return (
     <div
       className="relative"
@@ -95,12 +92,14 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
       <div className="absolute flex justify-between left-5 right-5 sm:left-10 sm:right-10 top-1/2">
         <button
           onClick={handlePreviousImage}
+          onKeyDown={handleKeyDown}
           className="rounded-full h-10 w-10 bg-blue-600 shadow-md hover:bg-blue-500 transition-colors duration-200"
         >
           {"<"}
         </button>
         <button
           onClick={handleNextImage}
+          onKeyDown={handleKeyDown}
           className="rounded-full h-10 w-10 bg-blue-600 shadow-md hover:bg-blue-500 transition-colors duration-200"
         >
           {">"}
