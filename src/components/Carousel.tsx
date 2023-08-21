@@ -63,9 +63,9 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === "ArrowLeft") {
-      setCurrentImageIndex(previousImageIndex);
+      handleNextImage();
     } else if (e.key === "ArrowRight") {
-      setCurrentImageIndex(nextImageIndex);
+      handlePreviousImage();
     }
   };
 
@@ -79,7 +79,7 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
     >
       {images.map((image, index) => (
         <div
-          key={index}
+          key={image.key}
           className={`absolute top-0 left-0 transition-opacity duration-500 ${
             currentImageIndex === index && !isFading
               ? "opacity-100"
@@ -93,6 +93,7 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
         <button
           onClick={handlePreviousImage}
           onKeyDown={handleKeyDown}
+          aria-label="Previous image"
           className="rounded-full h-10 w-10 bg-blue-600 shadow-md hover:bg-blue-500 transition-colors duration-200"
         >
           {"<"}
@@ -100,6 +101,7 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
         <button
           onClick={handleNextImage}
           onKeyDown={handleKeyDown}
+          aria-label="Next image"
           className="rounded-full h-10 w-10 bg-blue-600 shadow-md hover:bg-blue-500 transition-colors duration-200"
         >
           {">"}
