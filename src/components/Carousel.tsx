@@ -1,8 +1,9 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 
 export default function Carousel({ images }: { images: ReactElement[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const nextImageIndex = useCallback(
     (next: number) => (next >= images.length - 1 ? 0 : next + 1),
@@ -12,6 +13,11 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
     (prev: number) => (prev === 0 ? images.length - 1 : prev - 1),
     [images.length]
   );
+  const startInterval = useCallback(() => {
+    intervalRef.current = setInterval(() => {
+      setCurrentImageIndex(nextImageIndex);
+    }, 3000);
+  }, [nextImageIndex]);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -33,12 +39,12 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
 
   // Auto change image
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex(nextImageIndex);
-    }, 3000);
+    startInterval();
 
-    return () => clearInterval(interval);
-  }, [images.length, nextImageIndex]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [images.length, nextImageIndex, startInterval]);
 
   // Fade effect
   useEffect(() => {
@@ -52,10 +58,18 @@ export default function Carousel({ images }: { images: ReactElement[] }) {
 
   const handleNextImage = () => {
     setCurrentImageIndex(nextImageIndex);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      startInterval();
+    }
   };
 
   const handlePreviousImage = () => {
     setCurrentImageIndex(previousImageIndex);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      startInterval();
+    }
   };
 
   return (
